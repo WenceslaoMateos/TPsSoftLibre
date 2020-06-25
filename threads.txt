@@ -1,0 +1,18 @@
+cant_tickets= 200
+
+solicitud_compra()
+	if cant_tickets > 0
+		new thread //estado reservado
+		cant_tickets--
+		print "su ticket ha sido reservado"
+	else
+		print "No es posible solicitar la compra en este momento, reintente mas tarde"
+
+
+confirmacion_compra()
+	//pasar ticket a estado comprado
+	print "su compra se ha realizado con exito"
+
+
+imprime()
+	tickets en estado reservado y comprado
