@@ -4,7 +4,6 @@ from urllib import parse
 import threading
 from threading import Semaphore
 import time
-import requests
 
 sem = Semaphore(1)
 
