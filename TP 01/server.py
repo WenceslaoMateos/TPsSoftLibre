@@ -43,7 +43,6 @@ def compra(id):
 def initdb():
     sqliteConnection = sqlite3.connect('Tickets.db')
     cursor = sqliteConnection.cursor()
-    cursor.execute('DROP TABLE Tickets;')
     sqliteConnection.commit()
     cursor.execute('''  CREATE TABLE IF NOT EXISTS Tickets(
                         id INTEGER PRIMARY KEY,
