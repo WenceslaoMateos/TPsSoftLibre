@@ -93,9 +93,11 @@ class GetHandler(BaseHTTPRequestHandler):
         if res:
             t = threading.Thread(target=reserva, args=[])
             t.start()
+            print("Solicitud " + ''.join(x for x in t.name if x.isdigit()))
         if com:
             t = threading.Thread(target=compra, args=[int(com[0])])
             t.start()
+            print("Solicitud " + ''.join(x for x in t.name if x.isdigit()))
         response = "Respuesta random"
         self.send_response(200)
         self.send_header('Content-Type', 'text/plain; charset=utf-8')
