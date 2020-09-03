@@ -44,7 +44,7 @@ def initdb():
     sqliteConnection = sqlite3.connect('Tickets.db')
     cursor = sqliteConnection.cursor()
     sqliteConnection.commit()
-    cursor.execute('DROP TABLE Tickets;')
+    cursor.execute('DROP TABLE IF EXISTS Tickets;')
     cursor.execute('''  CREATE TABLE IF NOT EXISTS Tickets(
                         id INTEGER PRIMARY KEY,
                         state INTEGER);''')
