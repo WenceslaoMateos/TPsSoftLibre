@@ -12,7 +12,7 @@ def reserva():
     time.sleep(1)
     sem.acquire()
     res = dbconnection("SELECT id FROM Tickets WHERE state = 0;")
-    if res > 0:
+    if res >= 0:
         dbconnection(
             "UPDATE Tickets set state = 1 WHERE id = " + str(res) + ";")
         response = "Ticket nro " + str(res) + " Reservado"
@@ -44,6 +44,7 @@ def initdb():
     sqliteConnection = sqlite3.connect('Tickets.db')
     cursor = sqliteConnection.cursor()
     sqliteConnection.commit()
+    cursor.execute('DROP TABLE Tickets;')
     cursor.execute('''  CREATE TABLE IF NOT EXISTS Tickets(
                         id INTEGER PRIMARY KEY,
                         state INTEGER);''')
@@ -95,7 +96,7 @@ class GetHandler(BaseHTTPRequestHandler):
         if com:
             t = threading.Thread(target=compra, args=[int(com[0])])
             t.start()
-        response = "Exito"
+        response = "Respuesta random"
         self.send_response(200)
         self.send_header('Content-Type', 'text/plain; charset=utf-8')
         self.end_headers()
