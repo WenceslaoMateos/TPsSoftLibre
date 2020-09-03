@@ -6,34 +6,34 @@ from threading import Semaphore
 import time
 
 sem = Semaphore(1)
+total = 0
 
-
-def reserva():
+def reserva(sol):
     time.sleep(1)
     sem.acquire()
     res = dbconnection("SELECT id FROM Tickets WHERE state = 0;")
     if res >= 0:
         dbconnection(
             "UPDATE Tickets set state = 1 WHERE id = " + str(res) + ";")
-        response = "Ticket nro " + str(res) + " Reservado"
+        response = "Solicitud: " + str(sol) + " Ticket nro " + str(res) + " Reservado"
     else:
-        response = "Error reserva"
+        response = "Solicitud: " + str(sol) + " Error de reserva"
     time.sleep(1)
     sem.release()
     print(response)
     return response
 
 
-def compra(id):
+def compra(id, sol):
     time.sleep(1)
     sem.acquire()
     res = dbconnection("SELECT state FROM Tickets WHERE id = " + str(id) + ";")
     if res == 1:
         dbconnection(
             "UPDATE Tickets set state = 2 WHERE id = " + str(id) + ";")
-        response = "Ticket nro " + str(id) + " Comprado"
+        response = "Solicitud: " + str(sol) + " Ticket nro " + str(id) + " Comprado"
     else:
-        response = "Error compra"
+        response = "Solicitud: " + str(sol) + " Error de compra"
     time.sleep(1)
     sem.release()
     print(response)
@@ -86,18 +86,19 @@ def dblist():
 class GetHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
+        global total
         parsed_path = parse.urlparse(self.path)
         query = parse.parse_qs(parsed_path.query)
         res = query.get("reserva")
         com = query.get("compra")
+        id = total
+        total += 1
         if res:
-            t = threading.Thread(target=reserva, args=[])
+            t = threading.Thread(target=reserva, args=[id])
             t.start()
-            print("Solicitud " + ''.join(x for x in t.name if x.isdigit()))
         if com:
-            t = threading.Thread(target=compra, args=[int(com[0])])
+            t = threading.Thread(target=compra, args=[int(com[0]), id])
             t.start()
-            print("Solicitud " + ''.join(x for x in t.name if x.isdigit()))
         response = "Respuesta random"
         self.send_response(200)
         self.send_header('Content-Type', 'text/plain; charset=utf-8')
